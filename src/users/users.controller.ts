@@ -9,20 +9,24 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { FindManyUserQuery } from './dto/find-many-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @ApiOperation({ description: 'Create user' })
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
+  @ApiOperation({ description: 'Get user list' })
   @Get()
   async findMany(@Query() query: FindManyUserQuery) {
     const [users, count] = await this.usersService.findMany(query);
@@ -41,6 +45,7 @@ export class UsersController {
     };
   }
 
+  @ApiOperation({ description: 'Get user by ID' })
   @Get(':id')
   async findById(@Param('id') id: number) {
     const user = await this.usersService.findById(id);
@@ -57,6 +62,7 @@ export class UsersController {
     };
   }
 
+  @ApiOperation({ description: 'Update user by ID' })
   @Patch(':id')
   async updateById(
     @Param('id') id: number,
@@ -69,10 +75,13 @@ export class UsersController {
         error: 'not-found',
         message: 'The specified user was not found',
       });
+    console.log(id, updateUserDto);
+
     await this.usersService.updateById(id, updateUserDto);
     return;
   }
 
+  @ApiOperation({ description: 'Delete user by ID' })
   @Delete(':id')
   async deleteById(@Param('id') id: number) {
     const user = await this.usersService.findById(id);

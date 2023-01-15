@@ -16,6 +16,10 @@ export class HelperService {
       res.push(valueProcessed);
       return res;
     }, []);
-    return result.length ? result : undefined;
+    return result.length
+      ? result.reduce((a, c) => {
+          return { ...a, ...c };
+        }, {})
+      : undefined;
   }
 }
