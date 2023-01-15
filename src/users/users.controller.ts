@@ -19,22 +19,30 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
   async findMany(@Query() query: FindManyUserQuery) {
     const [users, count] = await this.usersService.findMany(query);
+    const { page, limit } = query;
+    const numPages = Math.ceil(count / limit);
+    const meta = {
+      page,
+      limit,
+      numPages,
+      numItems: count,
+    };
     return {
       status: 'success',
       data: users,
-      meta: count,
+      meta,
     };
   }
 
   @Get(':id')
-  async findyId(@Param('id') id: number) {
+  async findById(@Param('id') id: number) {
     const user = await this.usersService.findById(id);
     if (!user)
       throw new NotFoundException({
@@ -43,11 +51,17 @@ export class UsersController {
         message: 'The specified user was not found',
       });
 
-    return user;
+    return {
+      status: 'success',
+      data: user,
+    };
   }
 
   @Patch(':id')
-  async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
+  async updateById(
+    @Param('id') id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     const user = await this.usersService.findById(id);
     if (!user)
       throw new NotFoundException({
@@ -60,7 +74,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: number) {
+  async deleteById(@Param('id') id: number) {
     const user = await this.usersService.findById(id);
     if (!user)
       throw new NotFoundException({
@@ -68,6 +82,7 @@ export class UsersController {
         error: 'not-found',
         message: 'The specified user was not found',
       });
-    return this.usersService.deleteById(id);
+    await this.usersService.deleteById(id);
+    return;
   }
 }

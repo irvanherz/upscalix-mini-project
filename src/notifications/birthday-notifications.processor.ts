@@ -1,8 +1,8 @@
 import { HttpService } from '@nestjs/axios';
 import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
-import { User } from 'src/users/entities/user.entity';
-import { UsersService } from 'src/users/users.service';
+import { User } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
 
 @Processor('birthday-notification-queue')
 export class BirthdayNotificationConsumer {
@@ -13,8 +13,6 @@ export class BirthdayNotificationConsumer {
 
   @Process()
   async sendEmail(job: Job<User>) {
-    console.log('JOB', job.data);
-
     const user = job.data;
 
     this.httpService.post(

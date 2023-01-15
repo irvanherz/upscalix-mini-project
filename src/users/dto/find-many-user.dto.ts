@@ -11,17 +11,17 @@ export class FindManyUserQuery {
   @IsOptional()
   @IsNotEmpty()
   @IsString()
-  search: string;
+  search?: string;
   @IsOptional()
   @IsNotEmpty()
   @IsNumber()
   @Type(() => Number)
   @Min(1)
-  page = 1;
+  page? = 1;
   @IsOptional()
   @IsNotEmpty()
   @IsNumber()
   @Type(() => Number)
   @Min(1)
-  limit = 10;
+  limit? = 10;
 }

@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { BirthdayNotificationsService } from './birthday-notifications.service';
 import { NotificationsController } from './notifications.controller';
 import { NotificationsService } from './notifications.service';
 
@@ -8,10 +9,13 @@ describe('NotificationsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [NotificationsController],
-      providers: [NotificationsService],
+      providers: [
+        { provide: NotificationsService, useValue: {} },
+        { provide: BirthdayNotificationsService, useValue: {} },
+      ],
     }).compile();
 
-    controller = module.get<NotificationsController>(NotificationsController);
+    controller = module.get(NotificationsController);
   });
 
   it('should be defined', () => {
