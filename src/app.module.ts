@@ -29,13 +29,19 @@ import { UsersModule } from './users/users.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        url: configService.get<string>('DATABASE_URL'),
-        password: configService.get<string>('DATABASE_PASSWORD') + '',
-        synchronize: true,
-        entities: [User, UserConfig],
-      }),
+      useFactory: (configService: ConfigService) => {
+        console.log(
+          configService.get<string>('DATABASE_URL'),
+          configService.get<string>('DATABASE_PASSWORD'),
+        );
+        return {
+          type: 'postgres',
+          url: configService.get<string>('DATABASE_URL'),
+          password: configService.get<string>('DATABASE_PASSWORD') + '',
+          synchronize: true,
+          entities: [User, UserConfig],
+        };
+      },
     }),
     MailerModule.forRootAsync({
       imports: [ConfigModule],
