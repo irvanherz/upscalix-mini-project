@@ -4,8 +4,8 @@ Ini adalah sebuah project sederhana untuk memenuhi tugas seleksi Upscalix. Dibua
 
 ## Base URL
 
-`https://upscalix.restful.my.id`
+`http://upscalix.restful.my.id`
 
 ## Dokumentasi API
 
-[Lihat Dokumentasi API](https://upscalix.restful.my.id/api-docs)
+[Lihat Dokumentasi API](http://upscalix.restful.my.id/api-docs)
