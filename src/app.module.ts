@@ -30,10 +30,6 @@ import { UsersModule } from './users/users.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        console.log(
-          configService.get<string>('DATABASE_URL'),
-          configService.get<string>('DATABASE_PASSWORD'),
-        );
         return {
           type: 'postgres',
           url: configService.get<string>('DATABASE_URL'),
