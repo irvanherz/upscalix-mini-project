@@ -31,8 +31,8 @@ import { UsersModule } from './users/users.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        url: configService.get('DATABASE_URL'),
-        password: configService.get('DATABASE_PASSWORD'),
+        url: configService.get<string>('DATABASE_URL'),
+        password: configService.get<string>('DATABASE_PASSWORD'),
         synchronize: true,
         entities: [User, UserConfig],
       }),
@@ -42,12 +42,12 @@ import { UsersModule } from './users/users.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         transport: {
-          host: configService.get('SMTP_HOST'),
-          port: configService.get('SMTP_PORT'),
+          host: configService.get<string>('SMTP_HOST'),
+          port: configService.get<number>('SMTP_PORT'),
           secure: true,
           auth: {
-            user: configService.get('SMTP_USER'),
-            pass: configService.get('SMTP_PASS'),
+            user: configService.get<string>('SMTP_USER'),
+            pass: configService.get<string>('SMTP_PASS'),
           },
         },
         defaults: {
