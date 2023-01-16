@@ -39,9 +39,10 @@ export class BirthdayNotificationsService {
 
     const users = await usersOnBirthdayGenerator();
     for await (const user of users) {
-      console.log('U', user.email);
-
-      // this.birthdayNotificationQueue.add({ user }, { delay: 10000 });
+      this.birthdayNotificationQueue.add(
+        { user },
+        { timeout: 20000, attempts: 5 },
+      );
     }
   }
 }

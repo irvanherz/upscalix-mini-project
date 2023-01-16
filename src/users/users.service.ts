@@ -49,6 +49,21 @@ export class UsersService {
     return result;
   }
 
+  async findById(id: number) {
+    const user = await this.usersRepository.findOne({ where: { id } });
+    return user;
+  }
+
+  async updateById(id: number, updateUserDto: UpdateUserDto) {
+    const result = await this.usersRepository.update(id, updateUserDto);
+    return result.affected;
+  }
+
+  async deleteById(id: number) {
+    const result = await this.usersRepository.delete(id);
+    return result.affected;
+  }
+
   async findBirthdayGreetingReceiver(
     filters: FindBirthdayGreetingReceiverQuery,
   ) {
@@ -62,19 +77,24 @@ export class UsersService {
     // - DAY_OF_DOB == DAY_OF_NOW (user timezone)
     // - LAST_GREETING_SENT IS NULL || YEAR(LAST_GREETING_SENT) == YEAR(NOW) - 1
     const result = await this.usersRepository
-      .createQueryBuilder('u')
-      .leftJoin('u.config', 'c')
+      .createQueryBuilder('user')
+      .leftJoinAndMapOne(
+        'user.config',
+        UserConfig,
+        'config',
+        'config."userId" = user.id',
+      )
       .where(
         `(
-        EXTRACT(hour FROM (NOW() AT TIME ZONE u.location)) = 9 
+        EXTRACT(hour FROM (NOW() AT TIME ZONE user.location)) = 9
         AND
-        EXTRACT(month FROM CAST(u.dob as timestamp)) = EXTRACT(month FROM (NOW() AT TIME ZONE u.location))
+        EXTRACT(month FROM CAST(user.dob as timestamp)) = EXTRACT(month FROM (NOW() AT TIME ZONE user.location))
         AND
-        EXTRACT(day FROM CAST(u.dob as timestamp)) = EXTRACT(day FROM (NOW() AT TIME ZONE u.location))
+        EXTRACT(day FROM CAST(user.dob as timestamp)) = EXTRACT(day FROM (NOW() AT TIME ZONE user.location))
         AND (
-          c."lastBirthdayGreetingAt" IS NULL
+          config."lastBirthdayGreetingAt" IS NULL
           OR
-          EXTRACT(year FROM c."lastBirthdayGreetingAt" AT TIME ZONE u.location) = (EXTRACT(year FROM NOW() AT TIME ZONE u.location) - 1)
+          EXTRACT(year FROM config."lastBirthdayGreetingAt" AT TIME ZONE user.location) = (EXTRACT(year FROM NOW() AT TIME ZONE user.location) - 1)
         )
       )`,
       )
@@ -84,18 +104,12 @@ export class UsersService {
     return result;
   }
 
-  async findById(id: number) {
-    const user = await this.usersRepository.findOne({ where: { id } });
-    return user;
-  }
+  async updateUserLastBirthdayGreetingTime(userId: number) {
+    const result = await this.usersConfigRepository.update(
+      { user: { id: userId } },
+      { lastBirthdayGreetingAt: new Date() },
+    );
 
-  async updateById(id: number, updateUserDto: UpdateUserDto) {
-    const result = await this.usersRepository.update(id, updateUserDto);
-    return result.affected;
-  }
-
-  async deleteById(id: number) {
-    const result = await this.usersRepository.delete(id);
     return result.affected;
   }
 }

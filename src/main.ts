@@ -14,7 +14,7 @@ async function bootstrap() {
     .addTag('mails', 'Email management')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api-docs', app, document);
 
   await app.listen(3000);
 }

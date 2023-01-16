@@ -13,8 +13,6 @@ import { User } from './user.entity';
 export class UserConfig {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ type: 'varchar', length: 10, nullable: true })
-  timezone: string;
   @Column({ type: 'timestamp', nullable: true })
   lastBirthdayGreetingAt: Date;
   @CreateDateColumn()
