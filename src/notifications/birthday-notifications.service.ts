@@ -16,8 +16,8 @@ export class BirthdayNotificationsService {
    * Bithday notifications scheduler. Runs each 15 minutes. Considered based on
    * granularity of common timezone offsets
    */
-  // @Cron('* */15 * * * *', {
-  @Cron('*/10 * * * * *', {
+  @Cron('* */15 * * * *', {
+    // @Cron('*/10 * * * * *', {
     name: 'birthday-notification-task',
   })
   async triggerNotifications() {
